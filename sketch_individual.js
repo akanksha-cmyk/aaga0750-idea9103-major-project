@@ -1,7 +1,7 @@
 // declare all the global variables
 // global variables will be used throughout the functions
 let skyShape, waterShape, greenShape, boardwalkShape; // colour map overlays for the left image
-let skyFlippedShape, waterFlippedShape, greenFlippedShape, boardwalkFlippedShape; // flipped colour map overlays for the right image
+let skyFlippedShape, waterFlippedShape, greenFlippedShape, boardwalkFlippedShape; //flipped colour map overlays for the right image
 let skyCircles = [], waterCircles = [], greenCircles = [], boardwalkCircles = []; // arrays to store circles for each shape
 let imgAspectRatio; // aspect ratio for resizing
 let skyColour, waterColour, greenColour, boardwalkColour; // define colours for each shape
@@ -124,6 +124,56 @@ function keyPressed() { //added user interaction where pressing right arrow
     }
 }
 
+function drawInfoBox() { //drew an information box about the user inputs
+  // created a black box and white border for contrast
+  fill(0);
+  stroke(255); 
+  strokeWeight(2);
+  
+  // set box on the top left corner of canvas to be unobstructive
+  let boxWidth = 300;
+  let boxHeight = 200;
+  let boxX = 10;
+  let boxY = 10;
+
+  // drew the box
+  rect(boxX, boxY, boxWidth, boxHeight);
+
+  // established text style to ensure readability 
+  fill(255); // white text for contrast
+  textSize(12); //reference: https://p5js.org/reference/p5/textSize/ to explain the instructions
+  textAlign(LEFT, TOP); // left and top alignment from https://p5js.org/reference/p5/textAlign/
+  noStroke(); //no text stroke
+
+  // wrote the title at the top of the box
+  text("The Scream by Edvard Munch (1893): Reimagined", boxX + 10, boxY + 10);
+
+  // wrote up the user interaction instructions with proper spacing
+  let textY = boxY + 30; // started position for the first line of instructions
+  text("Press UP ARROW to increase circle speed", boxX + 10, textY);
+  textY += 20; // subsequently incremented y position for next lines
+
+  text("Press DOWN ARROW to decrease circle speed", boxX + 10, textY);
+  textY += 20; //text for down arrow to reduce speed
+
+  text("Press RIGHT ARROW to increase circle size", boxX + 10, textY);
+  textY += 20; //text for right arrow increasing size
+
+  text("Press LEFT ARROW to decrease circle size", boxX + 10, textY);
+  textY += 20; //left arrow interaction decreases size
+
+  text("Press 'R' to apply red heatwaves", boxX + 10, textY);
+  textY += 20; //red filter interaction 
+
+  text("Press 'B' to simulate blue chills", boxX + 10, textY);
+  textY += 20; //blue chills or blue background filter interaction
+
+  text("Press 'O' to add screamers", boxX + 10, textY);
+  textY += 20; //adding screamers interaction
+
+  text("Press 'X' to clear all changes", boxX + 10, textY); //reset canvas
+}
+
 function applyFilters() { //adds the blue filter or resets it
   if (blueFilter) {
     background(169, 207, 231); //changes the background color to blue when the blue filter is enabled
@@ -185,7 +235,8 @@ function draw() {
     pop(); // restored state
   }
 
-
+  // added the info box on top of everything
+  drawInfoBox();
 }
 
 //defined a function to built and drive circles with specific features added to an array  
@@ -355,7 +406,7 @@ function drawScreamer() {
 
   // Draw bodies main shape with curves
   fill(76, 63, 55); // body color
-  beginShape();
+  beginShape(); //reference: https://p5js.org/reference/p5/beginShape/ to begin the shape path.
   curveVertex(202 * scaleFactor, height); // start from bottom left of the screen
   curveVertex(202 * scaleFactor, 752 * scaleFactor); // curve down towards body base
   curveVertex(206 * scaleFactor, 692 * scaleFactor); // upward curve to define waist
@@ -370,7 +421,7 @@ function drawScreamer() {
   curveVertex(374 * scaleFactor, 610 * scaleFactor); // lower body
   curveVertex(305 * scaleFactor, 738 * scaleFactor); // return to lower body area
   curveVertex(305 * scaleFactor, height); // complete body outline at bottom right
-  endShape(CLOSE);
+  endShape(CLOSE); //reference: https://p5js.org/reference/p5/endShape/ to close the shape.
 
   // draw his hand - positioned near upper part of the body
   fill(211, 164, 103); // hand color
@@ -403,7 +454,7 @@ function drawScreamer() {
   curveVertex(313 * scaleFactor, 513 * scaleFactor); // end at chin
   endShape(CLOSE);
 
-  //  eyes and mouth to define facial expression
+  // eyes and mouth to define facial expression
   fill(216, 181, 117); // color for expression details
   ellipse(290 * scaleFactor, 440 * scaleFactor, 20 * scaleFactor, 30 * scaleFactor); // left eye
   ellipse(325 * scaleFactor, 440 * scaleFactor, 20 * scaleFactor, 30 * scaleFactor); // right eye
@@ -417,17 +468,17 @@ function resizeCanvasToFitWindow() {
 
   resizeCanvas(newWidth, newHeight);
   
-  // Calculate the width for each half of the screen
+  //calculate the width for each half of the screen
   let halfWidth = newWidth / 2;
   
-  // Resize all images to fill half the screen width while maintaining aspect ratio
+  //resize all images to fill half the screen width while maintaining aspect ratio
   screamImg.resize(halfWidth, newHeight);
   skyShape.resize(halfWidth, newHeight); 
   waterShape.resize(halfWidth, newHeight); 
   greenShape.resize(halfWidth, newHeight); 
   boardwalkShape.resize(halfWidth, newHeight);
   
-  // Resize flipped images
+  //resize flipped images
   skyFlippedShape.resize(halfWidth, newHeight); 
   waterFlippedShape.resize(halfWidth, newHeight); 
   greenFlippedShape.resize(halfWidth, newHeight); 
