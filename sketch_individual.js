@@ -1,4 +1,3 @@
-// declare all the global variables
 // global variables will be used throughout the functions
 let skyShape, waterShape, greenShape, boardwalkShape; // colour map overlays for the left image
 let skyFlippedShape, waterFlippedShape, greenFlippedShape, boardwalkFlippedShape; // flipped colour map overlays for the right image
@@ -12,8 +11,9 @@ const MIN_SCALE = 0.5; // Minimum scaling factor for circles
 let speedFactor = 1;  // Speed factor for circle movement (1 is normal speed)
 const MAX_SPEED = 5;  // Maximum speed factor
 const MIN_SPEED = 0.1; // Minimum speed factor
-
-
+let redFilter = false; // Boolean to check if the red filter is active
+let flickerSpeed = 10; // Adjust this value to control how fast the flicker happens
+let flickerChance = 0.05; // The chance of the red filter turning on/off each frame (lower value = more flicker)
 
 
 //preload the images
@@ -65,36 +65,35 @@ function setup() { //for the animation
 }
 function keyPressed() {
   if (key === "a" || key === "A") {
-    isPulsating = true; // enable pulsating effect when "a" is pressed
+    isPulsating = true; // Enable pulsating effect when "a" is pressed
   }
 
-  // Increase size when the right arrow is pressed
   if (keyCode === RIGHT_ARROW) {
     circleScaleFactor *= 1.1;
     circleScaleFactor = min(circleScaleFactor, MAX_SCALE);
   }
 
-  // Decrease size when the left arrow is pressed
   if (keyCode === LEFT_ARROW) {
     circleScaleFactor *= 0.9;
     circleScaleFactor = max(circleScaleFactor, MIN_SCALE);
   }
 
-  // Increase speed when the up arrow is pressed
   if (keyCode === UP_ARROW) {
     speedFactor *= 1.1;  // Increase speed by 10%
     speedFactor = min(speedFactor, MAX_SPEED);  // Enforce the maximum speed
   }
 
-  // Decrease speed when the down arrow is pressed
   if (keyCode === DOWN_ARROW) {
     speedFactor *= 0.9;  // Decrease speed by 10%
     speedFactor = max(speedFactor, MIN_SPEED);  // Enforce the minimum speed
   }
 
-  // Reset the canvas and values when the "x" key is pressed
+  if (key === 'r' || key === 'R') {
+    redFilter = true; // Enable the red filter when "r" is pressed
+  }
+
   if (key === 'x' || key === 'X') {
-    resetCanvas(); // Reset the canvas
+    redFilter = false; // Disable the red filter when "x" is pressed
   }
 }
 
@@ -111,43 +110,49 @@ function resetCanvas() {
   drawCircles(); // Replace with your actual function to redraw
 }
 
-
-
 function draw() {
-  background(0); // clear the canvas with a black background
-  frameCounter++; // frame counter increment to increase the speed
-
-  // rendered the image on both the left and right halves
-  for (let i = 0; i < 2; i++) {
-      push(); // saved the current transformation state
-      translate(i * width / 2, 0); // shifts to the left or right half of the canvas
-
-      if (i === 0) {
-          // draws circles for left half of image (normal)
-          moveAndDrawCircles(skyCircles, skyShape, skyColour);
-          moveAndDrawCircles(waterCircles, waterShape, waterColour);
-          moveAndDrawCircles(greenCircles, greenShape, greenColour);
-          moveAndDrawCircles(boardwalkCircles, boardwalkShape, boardwalkColour);
-          
-          // draws the screamer figure
-          drawScreamer();
-      } else {
-          // Right half (flipped images)
-          scale(-1, 1); // flips the objects horizontally
-          translate(-width / 2, 0); // moves the origin back into the canvas
-
-          moveAndDrawCircles(skyCircles, skyFlippedShape, skyColour);
-          moveAndDrawCircles(waterCircles, waterFlippedShape, waterColour);
-          moveAndDrawCircles(greenCircles, greenFlippedShape, greenColour);
-          moveAndDrawCircles(boardwalkCircles, boardwalkFlippedShape, boardwalkColour); // Use only the flipped boardwalk          
-
-          // drew the flipped screamer figure
-          drawScreamer();
-      }
-
-      pop(); // restored transformation state
+  background(0); // Clear the canvas with a black background
+  
+  // Random chance for flicker effect
+  if (random() < flickerChance && redFilter) {
+    fill(255, 0, 0, 100); // Apply red color overlay with some transparency
+    rect(0, 0, width, height); // Cover the entire canvas with the red overlay
   }
-} 
+
+
+  frameCounter++; // Frame counter increment to increase the speed
+
+  // Render the image on both the left and right halves
+  for (let i = 0; i < 2; i++) {
+    push(); // Save the current transformation state
+    translate(i * width / 2, 0); // Shifts to the left or right half of the canvas
+
+    if (i === 0) {
+      // Draw circles for left half of image (normal)
+      moveAndDrawCircles(skyCircles, skyShape, skyColour);
+      moveAndDrawCircles(waterCircles, waterShape, waterColour);
+      moveAndDrawCircles(greenCircles, greenShape, greenColour);
+      moveAndDrawCircles(boardwalkCircles, boardwalkShape, boardwalkColour);
+      
+      // Draw the screamer figure
+      drawScreamer();
+    } else {
+      // Right half (flipped images)
+      scale(-1, 1); // Flip the objects horizontally
+      translate(-width / 2, 0); // Move the origin back into the canvas
+
+      moveAndDrawCircles(skyCircles, skyFlippedShape, skyColour);
+      moveAndDrawCircles(waterCircles, waterFlippedShape, waterColour);
+      moveAndDrawCircles(greenCircles, greenFlippedShape, greenColour);
+      moveAndDrawCircles(boardwalkCircles, boardwalkFlippedShape, boardwalkColour); // Use only the flipped boardwalk
+
+      // Draw the flipped screamer figure
+      drawScreamer();
+    }
+
+    pop(); // Restore transformation state
+  }
+}
 
 //defined a function to built and drive circles with specific features added to an array  
 function initializeCircles(circles, shape, colour, count, xSpeed, ySpeed, size) {
@@ -311,11 +316,12 @@ function drawScreamer() {
   // to the height of the original proportions of the screamer at the optimal height
   // with scaleFactor being added to each element ensuring correct sizing for current window height
   let scaleFactor = height / 830;
+  let verticalOffset = 80 * scaleFactor;
 
   // Draw bodies main shape with curves
   fill(76, 63, 55); // body color
   beginShape();
-  curveVertex(width / 3, height); // start from bottom left of the screen
+  curveVertex(202 * scaleFactor, height); // start from bottom left of the screen
   curveVertex(202 * scaleFactor, 752 * scaleFactor); // curve down towards body base
   curveVertex(206 * scaleFactor, 692 * scaleFactor); // upward curve to define waist
   curveVertex(188 * scaleFactor, 651 * scaleFactor); // curve inwards for shape contour
@@ -328,7 +334,7 @@ function drawScreamer() {
   curveVertex(345 * scaleFactor, 520 * scaleFactor); // outline back to body
   curveVertex(374 * scaleFactor, 610 * scaleFactor); // lower body
   curveVertex(305 * scaleFactor, 738 * scaleFactor); // return to lower body area
-  curveVertex(320 * scaleFactor, height); // complete body outline at bottom right
+  curveVertex(305 * scaleFactor, height); // complete body outline at bottom right
   endShape(CLOSE);
 
   // draw his hand - positioned near upper part of the body
@@ -367,24 +373,28 @@ function drawScreamer() {
   ellipse(290 * scaleFactor, 440 * scaleFactor, 20 * scaleFactor, 30 * scaleFactor); // left eye
   ellipse(325 * scaleFactor, 440 * scaleFactor, 20 * scaleFactor, 30 * scaleFactor); // right eye
   ellipse(308 * scaleFactor, 490 * scaleFactor, 15 * scaleFactor, 30 * scaleFactor); // mouth
-}s
-
+}
   
-  //resized canvas to fit the windowbased on height and aspect ratio
+//resized canvas to fit the windowbased on height and aspect ratio
 function resizeCanvasToFitWindow() {
-    let newHeight = windowHeight;
-    let newWidth = newHeight * imgAspectRatio * 2;
+  let newWidth = windowWidth; // Use window width instead of calculating from height
+  let newHeight = windowHeight;
 
-    resizeCanvas(newWidth, newHeight);
-    screamImg.resize(newWidth / 2, newHeight);
-    skyShape.resize(newWidth / 2, newHeight); 
-    waterShape.resize(newWidth / 2, newHeight); 
-    greenShape.resize(newWidth / 2, newHeight); 
-    boardwalkShape.resize(newWidth / 2, newHeight);
-    
-    //resized flipped images
-    skyFlippedShape.resize(newWidth / 2, newHeight); 
-    waterFlippedShape.resize(newWidth / 2, newHeight); 
-    greenFlippedShape.resize(newWidth / 2, newHeight); 
-    boardwalkFlippedShape.resize(newWidth / 2, newHeight);
+  resizeCanvas(newWidth, newHeight);
+  
+  // Calculate the width for each half of the screen
+  let halfWidth = newWidth / 2;
+  
+  // Resize all images to fill half the screen width while maintaining aspect ratio
+  screamImg.resize(halfWidth, newHeight);
+  skyShape.resize(halfWidth, newHeight); 
+  waterShape.resize(halfWidth, newHeight); 
+  greenShape.resize(halfWidth, newHeight); 
+  boardwalkShape.resize(halfWidth, newHeight);
+  
+  // Resize flipped images
+  skyFlippedShape.resize(halfWidth, newHeight); 
+  waterFlippedShape.resize(halfWidth, newHeight); 
+  greenFlippedShape.resize(halfWidth, newHeight); 
+  boardwalkFlippedShape.resize(halfWidth, newHeight);
 }
