@@ -12,9 +12,11 @@ let speedFactor = 1;  // Speed factor for circle movement (1 is normal speed)
 const MAX_SPEED = 5;  // Maximum speed factor
 const MIN_SPEED = 0.1; // Minimum speed factor
 let redFilter = false; // Boolean to check if the red filter is active
-let flickerSpeed = 10; // Adjust this value to control how fast the flicker happens
+let flickerSpeed = 5; // Adjust this value to control how fast the flicker happens
 let flickerChance = 0.05; // The chance of the red filter turning on/off each frame (lower value = more flicker)
-
+let originalCircleScaleFactor = 1;  // Store the original value for circle scaling
+let originalSpeedFactor = 1;        // Store the original value for speed
+let blueFilter = false; // Tracks blue filter state
 
 //preload the images
 //these images will be used as a guide for the color map
@@ -63,6 +65,14 @@ function setup() { //for the animation
     initializeCircles(greenCircles, greenShape, greenColour, 2000, 0.15, -0.25, 12);
     initializeCircles(boardwalkCircles, boardwalkShape, boardwalkColour, 7000, -0.3, -0.4, 10);
 }
+
+function resetCanvas() {
+  // Reset the scale and speed factors to their original values
+  circleScaleFactor = originalCircleScaleFactor;
+  speedFactor = originalSpeedFactor;  // Reset speed factor to normal
+  console.log("Animation reset to default values.");
+}
+
 function keyPressed() {
   if (key === "a" || key === "A") {
     isPulsating = true; // Enable pulsating effect when "a" is pressed
@@ -92,27 +102,27 @@ function keyPressed() {
     redFilter = true; // Enable the red filter when "r" is pressed
   }
 
+  if (key === 'b' || key === 'B') {
+    blueFilter = true; // Enable the blue filter when "b" is pressed
+  }
+
   if (key === 'x' || key === 'X') {
     redFilter = false; // Disable the red filter when "x" is pressed
+    blueFilter = false;
+    resetCanvas(); // Optionally reset the canvas as well
   }
 }
 
-
-function resetCanvas() {
-  // Reset the scale and speed factors to their original values
-  circleScaleFactor = 1;
-  speedFactor = 1;  // Reset speed factor to normal
-
-  // Clear the canvas
-  clear();
-
-  // Redraw all elements (adjust this to your actual drawing logic)
-  drawCircles(); // Replace with your actual function to redraw
+function applyFilters() {
+  if (blueFilter) {
+    background(169, 207, 231); // Change the background color to blue when the blue filter is enabled
+  } else {
+    background(0); // Default black background when no filter is active
+  }
 }
-
 function draw() {
   background(0); // Clear the canvas with a black background
-  
+  applyFilters();
   // Random chance for flicker effect
   if (random() < flickerChance && redFilter) {
     fill(255, 0, 0, 100); // Apply red color overlay with some transparency
