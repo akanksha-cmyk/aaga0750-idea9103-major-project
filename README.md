@@ -3,12 +3,17 @@
 ### Part 1: Interaction Instructions
 **LEFT/RIGHT ARROWS:** The left and right are used to modulate the circles' size in the background animation. Pressing the 
 left arrow leads the circles to get smaller, and pressing the right arrow leads to the circles getting larger.
+
 **UP/DOWN ARROWS:** The up and down arrows on the keypad are used to adjust the speed of the circle animation in the background.
 Pressing the upward arrow results in a faster rate of movement, whereas, the downward arrow slows down the animations.
+
 **"O" or "o":** Clicking on the letter 'o' or 'O' results in a new screamer generated each time the button is pressed. 
 The new screamer figure is an image of the coded screamer, but small in size, and they move upward to the top of the canvas and dissapear off the edge. 
+
 **"R" or "r":** When the button "R" or "r" is pressed, then there is a red flicker effect in the background at random intervals.
+
 **"B" or "b":** When the button "B" or "b" is pressed, the background turns light blue indicative of the cold.
+
 **"X" or "x":** As the key "X" or "x" is pressed the canvas returns to the original state without the user inputs added. 
 
 ### Part 2: Individual Approach
@@ -113,7 +118,7 @@ https://www.w3schools.com/jsref/jsref_dowhile.asp
 https://p5js.org/reference/p5/beginShape/
 https://p5js.org/reference/p5/endShape/
 
-**References** 
+### References
 
 Frolov, O. (n.d.). Fluid Slider. Dribbble. https://dribbble.com/shots/2318685-Fluid-slider
 
