@@ -114,6 +114,7 @@ https://p5js.org/reference/p5/beginShape/
 https://p5js.org/reference/p5/endShape/
 
 **References** 
+
 Frolov, O. (n.d.). Fluid Slider. Dribbble. https://dribbble.com/shots/2318685-Fluid-slider
 
 Goodreads. (n.d.). A quote by Edvard munch. Goodreads | Meet your next favorite book. https://www.goodreads.com/quotes/423364-i-was-walking-along-a-path-with-two-friends
