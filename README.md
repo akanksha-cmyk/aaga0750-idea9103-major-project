@@ -19,7 +19,7 @@ aspires to engage the user and give users the freedom to reimagine this piece.
 
 **Unique Factor** 
 The Scream (Munch, 1983) was one of the most famous of his paintings, which captured the artist's experience with a panic attack (Zaczek, 2024). The painting has since become a representation of the lived experience of mental ill-health, and even entered the contemporary world through the screaming emoticon (Zaczek, 2024). After researching more about panic attacks, and anxiety, I found several symptoms: Pounding heart, sweating, chills, depersonalisation (when one feels out-of-the-body), weakness or dizziness (NIH, 2022). Therefore, I chose to base my user input impacts on each of these symptoms. So for example, when "o" is pressed and the screamers float to the top of the screen and leave, this represents depersonalisation. Additionally, I also manipulate colour and create a flickering-like effect to simulate hot flashes. 
-> In the words of Edvard Munch, "my friends walked on, and I stood there trembling with anxiety – and I sensed an infinite scream passing through nature.” (Goodreads, n.d, p. 1)
+> In the words of Edvard Munch, _"my friends walked on, and I stood there trembling with anxiety – and I sensed an infinite scream passing through nature._” (Goodreads, n.d, p. 1)
 
 This code is unique from the other manipulations in the following ways:
 - I use multiple screamers in the foreground and animate them to float upwards
